@@ -1,0 +1,12 @@
+.header-pagina{
+    text-align: center;
+    background-color: aquamarine;
+}
+
+.agregar-receta{
+    border: 1px solid;
+}
+
+.recetas > .titulo {
+    text-align: center;
+}
