@@ -1,94 +1,80 @@
 const elementoNombre = document.getElementById('nombre');
-const elementoAutor = document.getElementById('autor');
-const elementoTiempoPreparacion = document.getElementById('tiempo-preparación');
-const elementoIngredientes = document.getElementById('ingredientes');
-const elementoProcedimiento = document.getElementById('procedimiento');
-const elementoBoton = document.getElementById('agregar');
-elementoBoton.addEventListener('click', manejadorClick);
+const elementoAutor = document.querySelector('#autor');
+const elementoTiempoPreparacion = document.querySelector('#tiempo-preparacion');
+const elementoIngredientes = document.querySelector('#ingredientes');
+const elementoProcedimiento = document.querySelector('#procedimiento');
+const elementoBoton = document.querySelector('#btn-agregar');
+const elementoListaRecetas = document.querySelector('.lista-recetas')
 
-//const receta = obtenerReceta
-//CONTROLAR
-const recetas = obtenerRecetasDeStorge();
-for(receta of recetas){
-    agregarALista(receta);
+elementoBoton = addEventListener('click', agregarReceta);
+
+function agregarReceta() {
+    const receta = {
+        nombre: elementoNombre.value,
+        autor: elementoAutor.value,
+        tiempoPreparacion: elementoTiempoPreparacion.value,
+        ingredientes: elementoIngredientes.value,
+        procedimiento: elementoProcedimiento.value,
+    };
+    const elementoReceta = crearElementoReceta(receta);
+    elementoListaRecetas.appendChild(elementoReceta);
+    agregarRecetasAAlmacenamiento(receta);
 }
 
-function manejadorClick() {
-    const recetaAAgregar = { nombre: obtenerNombre(), autor: obtenerAutor(), tiempoPreparación: obtenerTiempoPreparacion(), ingredientes: obtenerIngredientes(), procedimiento: obtenerProcedimiento()};
-    if(obtenerNombre().length !== 0 && obtenerAutor().length !== 0 && obtenerTiempoPreparacion().length !== 0 && obtenerIngredientes().length !==0 && obtenerProcedimiento().length !==0) {
-        agregarALista(recetaAAgregar);
-        agregaraAStorage(recetaAAgregar);
-        vaciarCampos();
+function agregarRecetasAAlmacenamiento(receta) {
+    let recetasAlmacenadas = JSON.parse(localStorage.getItem('recetas'));
+    if(!recetasAlmacenadas) {
+        recetasAlmacenadas = [];
     }
-}
-//muy largo - acortar !
-
-function agregaraAStorage(receta){
-    const receta = obtenerRecetasDeStorge();
-    recetas.push(receta);
-    localStorage.setItem("listaDeRecetas", JSON.stringify(recetas));
+    recetasAlmacenadas.push(receta);
+    localStorage.setItem('recetas', JSON.stringify(recetasAlmacenadas));
 }
 
-function obtenerRecetasDeStorge() {
-    let recetas = localStorage.getItem("recetaAgregada");
-    if(recetas === null ) {
-        return [];
+function crearElementoReceta(receta) {
+    const elementoReceta = crearElementoConClaseYTexto('article', 'receta');
+    const elementoHeader = crearHeader(receta.nombre, receta.autor);
+    elementoReceta.appendChild(elementoHeader);
+    const elementoCuerpo = crearCuerpo(receta);
+    elementoReceta.appendChild(elementoCuerpo);
+    return elementoReceta;
+}
+
+function crearHeader(nombre, autor){
+    const elementoHeader = crearElementoConClaseYTexto('header', 'titulo');
+    const elementoNombre = crearElementoConClaseYTexto('span', 'nombre', nombre);
+    const elementoAutor = crearElementoConClaseYTexto('span', 'autor', autor);
+    elementoHeader.appendChild(elementoNombre);
+    elementoHeader.appendChild(elementoAutor);
+    return elementoHeader;
+}
+
+function crearCuerpo(receta) {
+    const elementoCuerpo = crearElementoConClaseYTexto('div', 'cuerpo');
+    const elementoTiempoPreparacionDos = crearElementoConClaseYTexto('p', 'tiempo-preparacion', receta.tiempoPreparacion);
+    const elementoIngredientesDos = crearIngrediente(receta.ingredientes);
+    const elementoProcedimientoDos = crearElementoConClaseYTexto('div', 'procedimiento', receta.procedimiento);
+    elementoCuerpo.appendChild(elementoTiempoPreparacionDos);
+    elementoCuerpo.appendChild(elementoIngredientesDos);
+    elementoCuerpo.appendChild(elementoProcedimientoDos);
+    return elementoCuerpo;
+}
+
+function crearIngrediente(ingredientes) {
+    const elementoIngredientesDos = crearElementoConClaseYTexto('ul', 'ingredientes');
+    const arrayIngredientes = ingredientes.split(',');
+    for(const ingrediente of arrayIngredientes) {
+        const elementoIngrediente = document.createElement('li');
+        elementoIngrediente.innerText.trim();
+        elementoIngredientesDos.appendChild(elementoIngrediente); 
     }
-    return JSON.parse(recetas);
+    return elementoIngredientesDos;
 }
 
-function vaciarCampos() {
-    vaciarCampoNombre();
-    vaciarCampoAutor();
-    vaciarCampoTiempoPreparacion();
-    vaciarCampoIngredientes();
-    vaciarCampoProcedimiento();
-}
-
-function obtenerNombre() {
-    return elementoNombre.value;
-}
-function obtenerAutor() {
-    return elementoAutor.value;
-}
-
-function obtenerTiempoPreparacion() {
-    return elementoTiempoPreparacion.value;
-}
-
-function obtenerIngredientes() {
-    return elementoIngredientes.value;
-}
-
-function obtenerProcedimiento() {
-    return elementoProcedimieto.value;
-}
-
-//function obtenerReceta(){
-//    return 
-//}
-function vaciarCampoNombre() {
-    elementoNombre.value = '';
-}
-
-function vaciarCampoAutor() {
-    elementoAutor.value = '';
-}
-
-function vaciarCampoTiempoPreparacion() {
-    elementoTiempoPreparación.value = '';
-}
-
-function vaciarCampoIngredientes() {
-    elementoIngredientes.value = '';
-}
-
-function vaciarCampoProcedimiento() {
-    elementoProcedimiento.value = '';
-}
-
-function agregarALista(receta) {
-    const elementoNuevo = document.createElement('li');
-    elementoNuevo.innerHTML = `<span class="apellido">${persona.apellido}</span>, <span class="nombre">${persona.nombre}</span>`
-    document.getElementById('lista').appendChild(elementoNuevo);
+function crearElementoConClaseYTexto(etiqueta, clase, texto) {
+    const elemento = document.createElement(etiqueta);
+    elemento.classList.add(clase);
+    if(texto) {
+        elemento.innerText = texto;
+    }
+    return elemento;
 }
