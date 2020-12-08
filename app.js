@@ -4,9 +4,14 @@ const elementoTiempoPreparacion = document.querySelector('#tiempo-preparacion');
 const elementoIngredientes = document.querySelector('#ingredientes');
 const elementoProcedimiento = document.querySelector('#procedimiento');
 const elementoBoton = document.querySelector('#btn-agregar');
-const elementoListaRecetas = document.querySelector('.lista-recetas')
+const elementoListaRecetas = document.querySelector('.lista-recetas');
 
-elementoBoton = addEventListener('click', agregarReceta);
+let recetasAlmacenadas = JSON.parse(localStorage.getItem('recetas'));
+    for(const receta of recetasAlmacenadas) {
+        agregarRecetaAInterfaz(receta);
+    }
+
+elementoBoton = addEventListener('click', agregarReceta());
 
 function agregarReceta() {
     const receta = {
@@ -15,13 +20,17 @@ function agregarReceta() {
         tiempoPreparacion: elementoTiempoPreparacion.value,
         ingredientes: elementoIngredientes.value,
         procedimiento: elementoProcedimiento.value,
-    };
-    const elementoReceta = crearElementoReceta(receta);
-    elementoListaRecetas.appendChild(elementoReceta);
-    agregarRecetasAAlmacenamiento(receta);
+    }
+    agregarRecetaAAlmacenamiento(receta);
+    vaciarCampos();
 }
 
-function agregarRecetasAAlmacenamiento(receta) {
+function agregarRecetaAInterfaz(receta) {
+    const elementoReceta = crearElementoReceta(receta);
+    elementoListaRecetas.appendChild(elementoReceta);
+}
+
+function agregarRecetaAAlmacenamiento(receta) {
     let recetasAlmacenadas = JSON.parse(localStorage.getItem('recetas'));
     if(!recetasAlmacenadas) {
         recetasAlmacenadas = [];
@@ -39,9 +48,9 @@ function crearElementoReceta(receta) {
     return elementoReceta;
 }
 
-function crearHeader(nombre, autor){
+function crearHeader(nombreReceta, autor) {
     const elementoHeader = crearElementoConClaseYTexto('header', 'titulo');
-    const elementoNombre = crearElementoConClaseYTexto('span', 'nombre', nombre);
+    const elementoNombre = crearElementoConClaseYTexto('span', 'nombre-receta', nombreReceta);
     const elementoAutor = crearElementoConClaseYTexto('span', 'autor', autor);
     elementoHeader.appendChild(elementoNombre);
     elementoHeader.appendChild(elementoAutor);
@@ -50,24 +59,24 @@ function crearHeader(nombre, autor){
 
 function crearCuerpo(receta) {
     const elementoCuerpo = crearElementoConClaseYTexto('div', 'cuerpo');
-    const elementoTiempoPreparacionDos = crearElementoConClaseYTexto('p', 'tiempo-preparacion', receta.tiempoPreparacion);
-    const elementoIngredientesDos = crearIngrediente(receta.ingredientes);
-    const elementoProcedimientoDos = crearElementoConClaseYTexto('div', 'procedimiento', receta.procedimiento);
-    elementoCuerpo.appendChild(elementoTiempoPreparacionDos);
-    elementoCuerpo.appendChild(elementoIngredientesDos);
-    elementoCuerpo.appendChild(elementoProcedimientoDos);
+    const elementoTiempoPreparacion = crearElementoConClaseYTexto('p', 'tiempo-preparacion', receta.tiempoPreparacion);
+    const elementoIngredientes = crearIngredientes(receta.ingredientes);
+    const elementoProcedimiento = crearElementoConClaseYTexto('p', 'procedimiento', receta.procedimiento);
+    elementoCuerpo.appendChild(elementoTiempoPreparacion);
+    elementoCuerpo.appendChild(elementoIngredientes);
+    elementoCuerpo.appendChild(elementoProcedimiento);
     return elementoCuerpo;
 }
 
-function crearIngrediente(ingredientes) {
-    const elementoIngredientesDos = crearElementoConClaseYTexto('ul', 'ingredientes');
+function crearIngredientes(ingredientes) {
+    const elementoIngredientes = crearElementoConClaseYTexto('ul', 'ingredientes');
     const arrayIngredientes = ingredientes.split(',');
     for(const ingrediente of arrayIngredientes) {
         const elementoIngrediente = document.createElement('li');
-        elementoIngrediente.innerText.trim();
-        elementoIngredientesDos.appendChild(elementoIngrediente); 
+        elementoIngrediente.innerText = ingrediente.trim();
+        elementoIngredientes.appendChild(elementoIngrediente); 
     }
-    return elementoIngredientesDos;
+    return elementoIngredientes;
 }
 
 function crearElementoConClaseYTexto(etiqueta, clase, texto) {

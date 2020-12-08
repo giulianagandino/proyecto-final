@@ -9,18 +9,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Domine:wght@600&display=swap" rel="stylesheet">
 </head>
+<div class="topnav">
+    <a class="active" href="#home">Inicio</a>
+    <a href="#news">x</a>
+    <a href="mailto: gandinogiuliana@gmail.com">Contacto</a>
+    <a href="#about">y</a>
+  </div>
 <body>
    <header class="header-pagina">
        <h1>Recetas</h1>
    </header>
    <section class="agregar-receta">    
-       <header class="titulo">
+       <header>
             <h1> Agregar recetas</h1>
         </header>
-    <div>
         <div class="grupo">
             <label for="nombre">Nombre</label>
-            <input trype="text" id="nombre">
+            <input type="text" id="nombre">
         </div>
         <div class="grupo">
             <label for="autor">Autor</label>
@@ -28,7 +33,7 @@
         </div>
         <div class="grupo">
             <label for="tiempo-preparacion">Tiempo de preparación</label>
-            <input type="text" id="tiempo-preparación">
+            <input type="text" id="tiempo-preparacion">
         </div>
         <div class="grupo">
             <label for="ingredientes">Ingredientes</label>
@@ -38,31 +43,14 @@
             <label for="procedimiento">Procedimiento</label>
             <textarea type="text" id="procedimiento"> </textarea>
         </div>
-        <button class="agregar">Agregar</button>
+        <button id="btn-agregar">Agregar</button>
     </div>
     </section>
     <selection class="lista-recetas">
+        <header class="titulo">
             <h1>Lista de recetas</h1>
-            <article class = "receta">
-                <header class="titulo">
-                <span class="nombre"></span>
-                <span class="autor"></span>
-                </header>
-                <div class="cuerpo">
-                    <p class="tiempo-preparacion"></p>
-                    <ul class="ingredientes"></ul>
-                    <p class="procedimiento"></p>
-
-                </div>
-            </article>
         </header>
-        <div class="cuerpo">
-            <ul class="ingredientes">
-                <li></li>
-            </ul>
-        </div>
-    </selection>
-    </body>
+    </section>
     <footer>
 
     </footer>
